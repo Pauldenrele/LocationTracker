@@ -200,7 +200,12 @@ private final static int LOGIN_PERMISSION = 1000;
 
     private void startNewActivity(int resultCode, Intent data) {
         if(resultCode==RESULT_OK){
-            
+            Intent intent = new Intent(MainActivity.this , ListOnline.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
         }
     }
 }
