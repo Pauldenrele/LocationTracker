@@ -1,11 +1,14 @@
 package com.example.myapplication;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.myapplication.Model.User;
@@ -38,17 +41,34 @@ import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
+Button btnLogin;
+private final static int LOGIN_PERMISSION = 1000;
+/*  Intent intent;
     DatabaseReference user_info;
     private final static int MY_REQUEST_CODE= 1000;
-    List<AuthUI.IdpConfig> providers;
+    List<AuthUI.IdpConfig> providers;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+   setContentView(R.layout.activity_main);
 
 
-        Paper.init(this);
+   btnLogin = (Button)findViewById(R.id.btnLogin);
+
+   btnLogin.setOnClickListener(new View.OnClickListener() {
+       @Override
+       public void onClick(View v) {
+
+             startActivityForResult(
+                     AuthUI.getInstance().createSignInIntentBuilder()
+                     .setAllowNewEmailAccounts(true).build() , LOGIN_PERMISSION
+             );
+       }
+   });
+
+
+
+    /*    Paper.init(this);
 
      //FirebaseInit
         user_info = FirebaseDatabase.getInstance().getReference(Common.USER_INFO);
@@ -106,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.getValue() ==null)  //if the user does nt exists
+                                if(dataSnapshot.getValue() !=null)  //if the user does nt exists
 
                                 {
                                     if(!dataSnapshot.child(firebaseUser.getUid()).exists())   //If key UID doesnt exists
@@ -119,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                                 else {
+
                                     Common.loggedUser = dataSnapshot.child(firebaseUser.getUid()).getValue(User.class);
 
 
@@ -127,8 +148,9 @@ public class MainActivity extends AppCompatActivity {
                                     Paper.book().write(Common.USER_UID_SAVE_KEY , Common.loggedUser.getUid());
 
                                     updateToken(firebaseUser);
-                                    UIsetup();
-
+                                   // UIsetup();
+                                    intent = new Intent(MainActivity.this , BottomAcitvity.class);
+                                    startActivity(intent);
 
                                 }
                             }
@@ -144,9 +166,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void UIsetup() {
         //Navigate Home
-        startActivity(new Intent(MainActivity.this, BottomAcitvity.class));
-        finish();
+
+       // finish();
     }
+
 
     private void updateToken(final FirebaseUser firebaseUser) {
         final DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.tokens);
@@ -164,6 +187,21 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, " "+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+*/
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+       if(requestCode==LOGIN_PERMISSION){
+           startNewActivity(resultCode , data);
+       }
 
     }
+
+    private void startNewActivity(int resultCode, Intent data) {
+        if(resultCode==RESULT_OK){
+            
+        }
+    }
 }
+
